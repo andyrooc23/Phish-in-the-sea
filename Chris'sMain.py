@@ -5,6 +5,7 @@ import PySimpleGUI as sg
 import pikepdf as pr
 import urllib3
 import requests
+import webbrowser
 
 
 def main():
@@ -35,12 +36,13 @@ def main():
                         if uri is not None:
                             links.append(str(uri))
 
-                if is_phishing(links):
-                    print("This email includes Phishing")
-                    phishy_link_window()
-                else:
-                    print("Email is clean :)")
-                    no_phish_window()
+                phishy_link_window()
+                # if is_phishing(links):
+                #     print("This email includes Phishing")
+                #     phishy_link_window()
+                # else:
+                #     print("Email is clean :)")
+                #     no_phish_window()
                 # for a in links:
                 #     print(a)
 
@@ -100,7 +102,8 @@ def block_sender_window():
 def notify_others_window():
     notify_others = [[sg.Text('Notify others', font='Helvetica 15 bold')],
                      [],
-                     [sg.OK()]]
+                     [sg.OK(), sg.OK('Draft E-Mail'), sg.OK('Copy E-Mail Content')],
+                     ]
 
     window = sg.Window('Phish In The Sea', notify_others)
 
@@ -110,8 +113,32 @@ def notify_others_window():
             window.close()
             window = None
             break
+        if event == "Draft E-Mail":
+            body_text = 'I recently got an email from a phishy site and wanted to let you know. Here is the name of ' \
+                        'the email sender so that you can be safe.\n(Email Sender Here)\nBlessings: (Your name here)'
+            body_text.replace(' ', '%20')
+            webbrowser.open('mailto:?&subject=Phishing-Email&body=' + body_text, new=1)
+        if event == 'Copy E-Mail Content':
+            show_text()
         window.close()
         window = None
+
+
+def show_text():
+    notify_others = [[sg.Text('Notify others', font='Helvetica 15 bold')],
+                     [sg.Text('I recently got an email from a phishy site and wanted to let you know. Here'
+                              ' is the name of the email sender so that you can be safe.\n(Email Sender Here)\n'
+                              'Blessings: (Your name here)', font='Helvetica 10')],
+                     [sg.OK()]]
+
+    window = sg.Window('Email Content', notify_others)
+
+    while True:
+        event, values = window.read()
+        if event == 'OK' or event == sg.WIN_CLOSED:
+            window.close()
+            window = None
+            break
 
 
 def no_phish_window():
