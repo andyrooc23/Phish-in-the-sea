@@ -1,9 +1,10 @@
 import PySimpleGUI as sg
 import PyPDF2 as pr
 
-
 import PySimpleGUI as sg
 import pikepdf as pr
+import urllib3
+import requests
 
 
 def main():
@@ -32,16 +33,20 @@ def main():
                     for annots in page.get("/Annots"):
                         uri = annots.get("/A").get("/URI")
                         if uri is not None:
-                            links.append(uri)
+                            links.append(str(uri))
 
-                for a in links:
-                    print(a)
-                file.close()
+                if is_phishing(links):
+                    print("This email includes Phishing")
+                    phishy_link_window()
+                else:
+                    print("Email is clean :)")
+                    no_phish_window()
+                # for a in links:
+                #     print(a)
 
-                phishy_link_window()
-            except:
-                no_phish_window()
-
+                # file.close()
+            except Exception as e:
+                print(e)
 
     window.close()
 
@@ -91,10 +96,11 @@ def file_not_found_window():
 def block_sender_window():
     print("blocked -- NOT FINISHED")
 
+
 def notify_others_window():
     notify_others = [[sg.Text('Notify others', font='Helvetica 15 bold')],
-                 [],
-                 [sg.OK()]]
+                     [],
+                     [sg.OK()]]
 
     window = sg.Window('Phish In The Sea', notify_others)
 
@@ -106,6 +112,7 @@ def notify_others_window():
             break
         window.close()
         window = None
+
 
 def no_phish_window():
     notify_others = [[sg.Text('No phishy links were found in your email!', font='Helvetica 15 bold')],
@@ -121,6 +128,19 @@ def no_phish_window():
             break
         window.close()
         window = None
+
+
+def is_phishing(ls):
+    api_link = "https://ipqualityscore.com/api/json/url/sKAXMkPigeY0JjodJK9iZW3hR8hBNhVO/"
+    for x in ls:
+        domain = urllib3.get_host(x)
+
+        response = requests.get(api_link + domain[1])
+        if response.json()['unsafe'] or response.json()['phishing'] or 'googleapi' in x:
+            return True
+        else:
+            continue
+    return False
 
 
 if __name__ == "__main__":
