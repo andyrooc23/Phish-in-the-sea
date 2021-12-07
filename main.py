@@ -76,15 +76,11 @@ def phishy_link_window():
         if event == "Cancel" or event == sg.WIN_CLOSED:
             break
         elif event == "Block Sender":
-            # window.close()
             block_sender_window()
-            break
         elif event == "Notify Others":
-            # window.close()
             notify_others_window()
-            break
-        window.close()
-        window = None
+    window.close()
+    window = None
 
 
 # If the file is an error a new popup window is thrown.
