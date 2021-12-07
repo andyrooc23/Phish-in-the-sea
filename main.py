@@ -76,11 +76,11 @@ def phishy_link_window():
         if event == "Cancel" or event == sg.WIN_CLOSED:
             break
         elif event == "Block Sender":
-            window.close()
+            # window.close()
             block_sender_window()
             break
         elif event == "Notify Others":
-            window.close()
+            # window.close()
             notify_others_window()
             break
         window.close()
@@ -161,8 +161,8 @@ def notify_others_window():
             webbrowser.open('mailto:?&subject=Phishing-Email&body=' + body_text, new=1)
         if event == 'Copy E-Mail Content':
             show_text()
-        window.close()
-        window = None
+        # window.close()
+        # window = None
 
 # Shows the user text that can be copied to the clipboard.
 def show_text():
