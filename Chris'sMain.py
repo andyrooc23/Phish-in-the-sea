@@ -36,15 +36,15 @@ def main():
                         if uri is not None:
                             links.append(str(uri))
 
-                phishy_link_window()
-                # if is_phishing(links):
-                #     print("This email includes Phishing")
-                #     phishy_link_window()
-                # else:
-                #     print("Email is clean :)")
-                #     no_phish_window()
-                # for a in links:
-                #     print(a)
+                # phishy_link_window()
+                if is_phishing(links):
+                    print("This email includes Phishing")
+                    phishy_link_window()
+                else:
+                    print("Email is clean :)")
+                    no_phish_window()
+                for a in links:
+                    print(a)
 
                 # file.close()
             except Exception as e:
