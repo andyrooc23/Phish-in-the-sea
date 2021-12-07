@@ -6,10 +6,10 @@ import pikepdf as pr
 import urllib3
 import requests
 import webbrowser
-
+import pyperclip as pc
 
 def main():
-    sg.theme('Light Blue')
+    sg.theme('Dark Blue')
 
     layout = [[sg.Text('Check email PDF for Phishing Content ><>', font=('Helvetica 15 bold'))],
               [sg.Input(size=(50, 50)), sg.FileBrowse(file_types=(("PDF files", "*.pdf"),))],
@@ -153,16 +153,21 @@ def notify_others_window():
 
 
 def show_text():
+    notification = 'I recently got an email from a phishy site and wanted to let you know. ' \
+                   'Here is the name of the email sender so that you can be safe.\n' \
+                   '(Email Sender Here)\n Blessings: (Your name here)'
+
     notify_others = [[sg.Text('Notify others', font='Helvetica 15 bold')],
-                     [sg.Text('I recently got an email from a phishy site and wanted to let you know. Here'
-                              ' is the name of the email sender so that you can be safe.\n(Email Sender Here)\n'
-                              'Blessings: (Your name here)', font='Helvetica 10')],
-                     [sg.OK()]]
+                     [sg.Text(notification, font='Helvetica 10')],
+                     [sg.OK()], [sg.OK('Copy to Clipboard')]]
 
     window = sg.Window('Email Content', notify_others)
 
     while True:
         event, values = window.read()
+        if event == 'Copy to Clipboard':
+            pc.copy(notification)
+            sg.Popup('Copied! Now paste anywhere you like :)')
         if event == 'OK' or event == sg.WIN_CLOSED:
             window.close()
             window = None
